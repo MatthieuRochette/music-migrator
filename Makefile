@@ -2,14 +2,14 @@ SRC	=	main.py
 
 NAME	=	music-migrator
 
-$(NAME):
+install:
 	cp $(SRC) $(NAME)
 	chmod +x $(NAME)
 
 clean:
 	rm -r -f ./__pycache__
 
-all: $(NAME) clean
+all: install clean
 
 fclean : clean
 	rm -f $(NAME)
