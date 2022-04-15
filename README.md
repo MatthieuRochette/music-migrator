@@ -20,6 +20,7 @@ So here we are.
 ### Common
 - Download or clone this repository
 - Open a terminal inside the repository root folder
+- Go to [the Spotify Developers Dashboard](https://developer.spotify.com/dashboard) to create your own app and use its credentials in the `config.toml` file.
 
 ### On windows
 
