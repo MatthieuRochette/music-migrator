@@ -190,3 +190,19 @@ class DeezerApi:
             self._oauth_token = self._oauth.use_oauth2()
         self._oauth.save_oauth_token(self._oauth_token)
         logger.info("User successfully logged in to Deezer.")
+
+    def search(self, *args, **kwargs) -> list[deezer.Track]:
+        return self._client.search(*args, **kwargs)
+
+    def search_best_match_for_spotify_track(self, spotify_track: dict) -> deezer.Track:
+        naive_search_query = " ".join(
+            [
+                spotify_track["name"],
+                *[artist["name"] for artist in spotify_track["artists"]],
+            ]
+        )
+        naive_search_results = self.search(query=naive_search_query)
+        result: deezer.Track = naive_search_results[0]
+        logger.info(
+            f"{result.title}, {result.artist.name} {result.preview} \t{'| Not sure' if result.title != spotify_track['name'] or result.artist.name != spotify_track['artists'][0]['name'] else '| Sure'}"
+        )

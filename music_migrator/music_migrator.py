@@ -22,8 +22,11 @@ class MusicMigrator:
 class MusicMigratorCli(MusicMigrator):
     def main(self):
         super().setup()
-        favorites = self.spotify.get_favorites(result_limit=20)
-        self.spotify.pretty_log_results_tracks(favorites)
+        favorites_results = self.spotify.get_favorites(result_limit=20)
+        self.spotify.pretty_log_results_tracks(favorites_results)
+        for favorites in favorites_results:
+            for favorite in favorites["items"]:
+                self.deezer.search_best_match_for_spotify_track(favorite["track"])
 
 
 class MusicMigratorGui(MusicMigrator):
