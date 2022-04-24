@@ -4,9 +4,16 @@ from .utils.custom_logger import logger
 
 
 class MusicMigrator:
-    def setup(self):
+    def __init__(self):
         self.spotify = SpotifyApi()
         self.deezer = DeezerApi()
+
+    def migrate_favorites_from_spotify_to_deezer(self):
+        favorites_results = self.spotify.get_favorites(result_limit=10)
+        self.spotify.pretty_log_results_tracks(favorites_results)
+        for favorites in favorites_results:
+            for favorite in favorites["items"]:
+                self.deezer.search_best_match_for_spotify_track(favorite["track"])
 
     def main(self):
         logger.fatal("Calling main function in the base MusicMigrator class.")
@@ -21,17 +28,11 @@ class MusicMigrator:
 
 class MusicMigratorCli(MusicMigrator):
     def main(self):
-        super().setup()
-        favorites_results = self.spotify.get_favorites(result_limit=20)
-        self.spotify.pretty_log_results_tracks(favorites_results)
-        for favorites in favorites_results:
-            for favorite in favorites["items"]:
-                self.deezer.search_best_match_for_spotify_track(favorite["track"])
+        self.migrate_favorites_from_spotify_to_deezer()
 
 
 class MusicMigratorGui(MusicMigrator):
     def main(self):
-        # super().setup()  # uncomment this when implementing this class
         raise NotImplementedError(
             "The Gui version will wait until the CLI one is done, as the focus is on the base class and a CLI is faster to implement."
         )
