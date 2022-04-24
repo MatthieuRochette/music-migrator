@@ -40,6 +40,10 @@ class SpotifyApi:
         self._api = spotipy.Spotify(auth_manager=self._auth_manager)
 
     def get_favorites(self, result_limit=-1, _pagination=20) -> list:
+        logger.info("Beginning to fetch favorites on Spotify. Might take a long time.")
+        if _pagination > result_limit:
+            _pagination = result_limit
+
         global_result = []
         result = self._api.current_user_saved_tracks(limit=_pagination)
         count = len(result["items"])
@@ -53,6 +57,7 @@ class SpotifyApi:
             else:
                 result = None
 
+        logger.info("Finished fetching favorites on spotify.")
         return global_result
 
     def pretty_log_results_tracks(self, results: list):
