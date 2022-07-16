@@ -1,5 +1,3 @@
-import sys
-
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -39,13 +37,13 @@ class SpotifyApi:
 
         self._api = spotipy.Spotify(auth_manager=self._auth_manager)
 
-    def get_favorites(self, result_limit=-1, _pagination=20) -> list:
+    def get_favorites(self, result_limit=-1, _pagination=20) -> list[dict]:
         logger.info("Beginning to fetch favorites on Spotify. Might take a long time.")
         if _pagination > result_limit:
             _pagination = result_limit
 
         global_result = []
-        result = self._api.current_user_saved_tracks(limit=_pagination)
+        result: dict = self._api.current_user_saved_tracks(limit=_pagination)
         count = len(result["items"])
         global_result.append(result)
 
@@ -55,7 +53,7 @@ class SpotifyApi:
                 result = self._api.next(result)
                 global_result.append(result)
             else:
-                result = None
+                result = {}
 
         logger.info("Finished fetching favorites on spotify.")
         return global_result
