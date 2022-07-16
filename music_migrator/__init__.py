@@ -1,9 +1,9 @@
-import sys
 import logging
+import sys
 
-from .music_migrator import MusicMigratorCli, MusicMigratorGui, MusicMigrator
+from .music_migrator import MusicMigrator, MusicMigratorCli, MusicMigratorGui
 from .utils import cli_args
-from .utils.custom_logger import logger, _formatter
+from .utils.custom_logger import _formatter, logger
 
 _instance: MusicMigrator
 
