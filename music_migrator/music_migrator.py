@@ -1,5 +1,6 @@
-from .apis import SpotifyApi, DeezerApi
+from time import perf_counter
 
+from .apis import DeezerApi, SpotifyApi
 from .utils.custom_logger import logger
 
 
@@ -9,11 +10,12 @@ class MusicMigrator:
         self.deezer = DeezerApi()
 
     def migrate_favorites_from_spotify_to_deezer(self):
-        favorites_results = self.spotify.get_favorites(result_limit=10)
+        t1 = perf_counter()
         self.spotify.pretty_log_results_tracks(favorites_results)
         for favorites in favorites_results:
             for favorite in favorites["items"]:
                 self.deezer.search_best_match_for_spotify_track(favorite["track"])
+        logger.info(f"Execution time: {perf_counter() - t1}")
 
     def main(self):
         logger.fatal("Calling main function in the base MusicMigrator class.")
