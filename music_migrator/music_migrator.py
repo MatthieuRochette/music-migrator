@@ -11,6 +11,7 @@ class MusicMigrator:
 
     def migrate_favorites_from_spotify_to_deezer(self):
         t1 = perf_counter()
+        favorites_results = self.spotify.get_favorites(result_limit=10)
         self.spotify.pretty_log_results_tracks(favorites_results)
         for favorites in favorites_results:
             for favorite in favorites["items"]:
