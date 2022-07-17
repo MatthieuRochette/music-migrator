@@ -132,3 +132,4 @@ dmypy.json
 *.exe
 .vscode
 *.cache
+main_local.py
