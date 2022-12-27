@@ -9,11 +9,13 @@ from urllib.parse import parse_qsl, urlencode, urlparse
 import requests
 
 import deezer
+from deezer import Track as DeezerTrack
 from deezer.exceptions import DeezerErrorResponse
 from deezer.pagination import PaginatedList
 
 from ..config import config
 from ..utils.custom_logger import logger
+from ..utils.enums import SearchResultCertaintyEnum
 
 
 class DeezerOauthError(Exception):
@@ -213,7 +215,9 @@ class DeezerApi:
             else:
                 raise e
 
-    def search_best_match_for_spotify_track(self, spotify_track: dict) -> deezer.Track:
+    def search_best_match_for_spotify_track(
+        self, spotify_track: dict
+    ) -> tuple[DeezerTrack, SearchResultCertaintyEnum]:
         naive_search_query = " ".join(
             [
                 spotify_track["name"],
@@ -227,9 +231,15 @@ class DeezerApi:
             logger.info(
                 f"No result for track '{spotify_track['name']}' by {spotify_track['artists'][0]['name']}."
             )
-            return None
+            return (None, SearchResultCertaintyEnum.NOT_FOUND)
         else:
-            logger.info(
-                f"{result.title}, {result.artist.name} {result.preview} \t{'| Not sure' if result.title != spotify_track['name'] or result.artist.name != spotify_track['artists'][0]['name'] else '| Sure'}"
+            certainty = (
+                SearchResultCertaintyEnum.NOT_SURE
+                if result.title != spotify_track["name"]
+                or result.artist.name != spotify_track["artists"][0]["name"]
+                else SearchResultCertaintyEnum.SURE
             )
-            return result
+            logger.info(
+                f"Found '{result.title}' by {result.artist.name} ({result.preview}) \t{'| Not sure' if certainty == SearchResultCertaintyEnum.NOT_SURE else '| Sure'}"
+            )
+            return (result, certainty)

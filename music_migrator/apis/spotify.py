@@ -4,6 +4,8 @@ from spotipy.oauth2 import SpotifyOAuth
 from ..config import config
 from ..utils.custom_logger import logger
 
+SpotifyTrack = dict
+
 
 class SpotifyApi:
     """A class used as an abstraction layer for the underlying Spotify API implementation."""
@@ -55,7 +57,7 @@ class SpotifyApi:
             else:
                 result = {}
 
-        logger.info("Finished fetching favorites on spotify.")
+        logger.info("Finished fetching favorites on Spotify.")
         return global_result
 
     def pretty_log_results_tracks(self, results: list):

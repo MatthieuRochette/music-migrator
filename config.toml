@@ -2,7 +2,8 @@
 [spotify]
 client_id = "21b605c0353a468985e54561f0d3ec31"
 client_secret = "0e200fc9e6a4411f8b932890e4598fff"
-redirect_uri = "http://localhost:12345/oauth/callback"
+redirect_uri = "http://localhost:12345/oauth/callback/spotify"
+
 
 [deezer]
     [deezer.oauth]
